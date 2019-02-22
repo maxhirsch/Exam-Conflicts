@@ -1,3 +1,4 @@
+import sys
 """
 Goal:
 
@@ -10,7 +11,7 @@ Goal:
 import pandas as pd
 import numpy as np
 
-def count_conflicts(data, exam_order, trimester, consecutive=True, overlap=True):
+def count_conflicts(data, exam_order, trimester, consecutive=True, overlap=True, minimum=None):
     # filter dataframe to given trimester
     data = data[data.title == trimester]
 
@@ -21,6 +22,8 @@ def count_conflicts(data, exam_order, trimester, consecutive=True, overlap=True)
             student_exam_sched = list(row[exam_order])
             # count number of 3-consecutive exams
             count += count_threes(student_exam_sched)
+            if minimum != None and count >= minimum:
+                return -1
     
     if overlap:
         for index, row in data.iterrows():
@@ -28,6 +31,8 @@ def count_conflicts(data, exam_order, trimester, consecutive=True, overlap=True)
             student_exam_sched = list(row[exam_order])
             # number of more than 1 exam in block
             count += count_overlaps(student_exam_sched)
+            if minimum != None and count >= minimum:
+                return -1
 
     return count
 
@@ -56,7 +61,7 @@ def naive_minimization(data, exam_order, trimester, trials = 1000, seed = 42):
     Simply randomly permute the exam order, keeping
     track of minimum conflict exam_order
     """
-    np.random.seed(seed)
+    #np.random.seed(seed)
 
     min_conflicts = count_conflicts(data, exam_order, trimester)
     min_order = exam_order
@@ -71,18 +76,18 @@ def naive_minimization(data, exam_order, trimester, trials = 1000, seed = 42):
 
     return (min_order, min_conflicts)
 
-def greedy_minimization(data, exam_order, trimester, consecutive=True, overlap=True):
+def greedy_minimization(data, exam_order, trimester):
     exam_order = list(exam_order)
+
     # remove "read" from exam_order; we will add these back in later
     num_read = exam_order.count("read")
     for i in range(num_read):
         exam_order.remove("read")
     
     greedy_order = []
-
+    
     while len(exam_order) > 0:
-
-        conflicts = [count_conflicts(data, np.array(greedy_order + [e]), trimester, consecutive, overlap) for e in exam_order]
+        conflicts = [count_conflicts(data, np.array(greedy_order + [e]), trimester, overlap=False) for e in exam_order]
         min_conflicts = min(conflicts)
         min_conflicts_index = conflicts.index(min_conflicts)
         greedy_order.append(exam_order[min_conflicts_index])
@@ -90,12 +95,13 @@ def greedy_minimization(data, exam_order, trimester, consecutive=True, overlap=T
 
     # add back "read" blocks
     for i in range(num_read):
-        conflicts = [count_conflicts(data, np.array(greedy_order[:j] + ["read"] + greedy_order[j:]), trimester, consecutive, overlap) for j in range(len(greedy_order)+1)]
+        conflicts = [count_conflicts(data, np.array(greedy_order[:j] + ["read"] + greedy_order[j:]), 
+                trimester, overlap=False) for j in range(len(greedy_order)+1)]
         min_conflicts = min(conflicts)
         min_conflicts_index = conflicts.index(min_conflicts)
         greedy_order = greedy_order[:min_conflicts_index] + ["read"] + greedy_order[min_conflicts_index:]
-   
-    return (greedy_order, count_conflicts(data, np.array(greedy_order), trimester, consecutive, overlap))
+    
+    return (greedy_order, count_conflicts(data, np.array(greedy_order), trimester, overlap=False))
 
 def move_to_makeup_block(data, exam_order, trimester, makeup_block_num=1):
     data = data[data.title == trimester]
@@ -110,12 +116,14 @@ def move_to_makeup_block(data, exam_order, trimester, makeup_block_num=1):
 def pair_exams(exams, num_pairs):
     if num_pairs == 0:
         return [exams]
+    
     pairings = []
     for i in range(len(exams)):
         for j in range(i+1, len(exams)):
             other_pairings = pair_exams(exams[i+1:j] + exams[j+1:], num_pairs-1)
             for p in other_pairings:
                 pairings.append([exams[k] for k in range(i)] + [exams[i] + '_' + exams[j]] + p)
+    
     return pairings
 
 def add_pairs_to_dataframe(data, exams, num_pairs):
@@ -127,85 +135,64 @@ def add_pairs_to_dataframe(data, exams, num_pairs):
             other_pairings = pair_exams(exams[i+1:j] + exams[j+1:], num_pairs-1)
             for p in other_pairings:
                 pairings.append([exams[k] for k in range(i)] + [exams[i] + '_' + exams[j]] + p)
-                data[exams[i] + '_' + exams[j]] = data[exams[i]] + data[exams[j]]
+            data[exams[i] + '_' + exams[j]] = data[exams[i]] + data[exams[j]]
     return pairings
 
+def sample(array, n_samples):
+    if type(array) == list:
+        array = np.array(array)
+    return array[np.random.permutation(len(array))[:n_samples]]
+
+def get_minimum(data, samples, trimester, consecutive=True, overlap=True):
+    if len(samples) == 0:
+        return None
+    
+    min_order, min_conflicts = greedy_minimization(data, samples[0], trimester)
+    min_conflicts += count_conflicts(data, samples[0], trimester, consecutive=False)
+    
+    i = 1
+    t = len(samples)
+    
+    for s in samples[1:]:
+        print(i/t)
+        conflicts = count_conflicts(data, s, trimester, consecutive=False, minimum=min_conflicts)
+        if conflicts == -1:
+            continue
+        
+        order, consec_conflicts = greedy_minimization(data, s, trimester)
+        conflicts += consec_conflicts
+        
+        if conflicts < min_conflicts:
+            min_order = order
+            min_conflicts = conflicts
+    
+    return (min_order, min_conflicts)
 
 if __name__=='__main__':
 
+    np.random.seed(42)
+
     data_2017_18 = pd.read_csv("Exam-Conflicts-2018.csv")
-
-    exam_order_1 = np.array(["read", "adv_math_elec", "en400", "bio", "math", \
-            "ee_elec_sci", "chem", "wl", "cs_elec_hum", "phys", \
-            "as_ss"])
-    exam_order_2 = np.array(["ee_elec_sci", "bio", "math", "read", "chem", \
-            "wl", "cs_elec_hum", "phys", "as_ss", "adv_math_elec", "en400"])
-    exam_order_3 = np.array(["ee_elec_sci", "en400_as_ss", "math", "cs_elec_hum", \
-            "chem_phys", "adv_math_elec", "wl", "bio"])
-
-    data_2017_18["ee_elec_sci"] = data_2017_18["ee"] + data_2017_18["elec_sci"]
-    data_2017_18["cs_elec_hum"] = data_2017_18["cs"] + data_2017_18["elec_hum"]
-    data_2017_18["as_ss"] = data_2017_18["as"] + data_2017_18["ss"]
-    data_2017_18["en400_as_ss"] = data_2017_18["en400"] + data_2017_18["as_ss"]
-    data_2017_18["chem_phys"] = data_2017_18["chem"] + data_2017_18["phys"]
-    data_2017_18["read"] = 0 * data_2017_18["math"] # set to column of 0s
-    data_2017_18["makeup1"] = data_2017_18["read"] # set to column of 0s
-    data_2017_18["makeup2"] = data_2017_18["read"] # set to column of 0s
-
-    num_blocks = 10
-
-    """
-    total = count_conflicts(data_2017_18, exam_order_3, "Trimester 3")
-
-    print(total)
-    print(exam_order_3)
-
-    i = 1
-    while "makeup" + str(i) in exam_order_1:
-        move_to_makeup_block(data_2017_18, exam_order_1, "Trimester 1", i)
-        i += 1
-
-    print(greedy_minimization(data_2017_18, exam_order_3, "Trimester 3"))
-    """
-
     exams = ["adv_math_elec", "en400", "bio", "math", "ee", "elec_sci", "chem", "wl", "cs", "elec_hum", "phys", "as", "ss"]
-    paired_exams = []
     
-    """
-    for i in range(len(exams)//2+1):
-        p = pair_exams(exams, i)
-        print(len(p))
-        paired_exams += p#pair_exams(exams, i)
-    """
-    paired_exams = pair_exams(exams, len(exams)-num_blocks)
-    print(len(paired_exams))
-
-    pairs_within_num_blocks = []
-    for i in range(len(paired_exams)):
-        if len(paired_exams[i]) <= num_blocks:
-            pairs_within_num_blocks.append(np.array(paired_exams[i]))
-
-    print(len(pairs_within_num_blocks))
-
     # add each pair of exam blocks to the dataframe
     data_pairings = add_pairs_to_dataframe(data_2017_18, exams, len(exams)//2)
     
-    progress_total = len(pairs_within_num_blocks)
-    # determine best pairing setup
-    min_order, min_conflicts = greedy_minimization(data_2017_18, pairs_within_num_blocks[0], "Trimester 1", consecutive=False)
-    for i in range(len(pairs_within_num_blocks)):
-        print(i/progress_total)
-        order, conflicts = greedy_minimization(data_2017_18, pairs_within_num_blocks[i], "Trimester 1", consecutive=False)
-        if conflicts < min_conflicts:
-            min_conflicts = conflicts
-            min_order = order
+    data_2017_18["read"] = 0 * data_2017_18["math"] # set to column of 0s
 
+    num_blocks = 10
+    num_reading = 1
 
+    paired_exams = pair_exams(exams, len(exams)-num_blocks)
+    pairs_sample = list(sample(paired_exams, 2))
+    
+    for i in range(len(pairs_sample)):
+        for read_block in range(num_reading):
+            pairs_sample[i] = np.append(pairs_sample[i], "read")
+  
 
+    
+    min_order, min_conflicts = get_minimum(data_2017_18, pairs_sample, "Trimester 1")
 
-
-
-
-
-
+    print(min_order, min_conflicts)
 
