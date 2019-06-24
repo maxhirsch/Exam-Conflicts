@@ -1,0 +1,443 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>MainWindow</class>
+ <widget class="QMainWindow" name="MainWindow">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>1149</width>
+    <height>690</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>SSMES</string>
+  </property>
+  <property name="autoFillBackground">
+   <bool>false</bool>
+  </property>
+  <widget class="QWidget" name="centralwidget">
+   <layout class="QGridLayout" name="gridLayout">
+    <item row="13" column="5">
+     <widget class="QLabel" name="RestrictedSplitDepartmentsLabel">
+      <property name="text">
+       <string>Restricted Split Departments</string>
+      </property>
+     </widget>
+    </item>
+    <item row="3" column="4">
+     <widget class="QPushButton" name="FromExcludedButton">
+      <property name="text">
+       <string>From Excluded</string>
+      </property>
+     </widget>
+    </item>
+    <item row="1" column="5">
+     <widget class="QLabel" name="ExcludedCoursesLabel">
+      <property name="text">
+       <string>Excluded Courses</string>
+      </property>
+     </widget>
+    </item>
+    <item row="5" column="1">
+     <widget class="QPushButton" name="DataFileButton">
+      <property name="minimumSize">
+       <size>
+        <width>0</width>
+        <height>40</height>
+       </size>
+      </property>
+      <property name="maximumSize">
+       <size>
+        <width>16777215</width>
+        <height>40</height>
+       </size>
+      </property>
+      <property name="text">
+       <string>Choose File</string>
+      </property>
+     </widget>
+    </item>
+    <item row="4" column="0">
+     <widget class="QLabel" name="DataFileLabel">
+      <property name="text">
+       <string>Data File</string>
+      </property>
+     </widget>
+    </item>
+    <item row="15" column="4">
+     <widget class="QPushButton" name="FromRestrictedButton">
+      <property name="text">
+       <string>From Restricted</string>
+      </property>
+     </widget>
+    </item>
+    <item row="16" column="5">
+     <widget class="QCheckBox" name="CheckBox">
+      <property name="text">
+       <string>Infer Split Departments</string>
+      </property>
+     </widget>
+    </item>
+    <item row="2" column="3" rowspan="6">
+     <widget class="QListWidget" name="CoursesListWidget"/>
+    </item>
+    <item row="7" column="0" colspan="3">
+     <widget class="QPlainTextEdit" name="NumberOfExamDaysTextEdit">
+      <property name="minimumSize">
+       <size>
+        <width>0</width>
+        <height>40</height>
+       </size>
+      </property>
+      <property name="maximumSize">
+       <size>
+        <width>16777215</width>
+        <height>40</height>
+       </size>
+      </property>
+     </widget>
+    </item>
+    <item row="14" column="5" rowspan="2" colspan="3">
+     <widget class="QListWidget" name="RestrictedSplitDepartmentsListWidget"/>
+    </item>
+    <item row="11" column="4">
+     <widget class="QPushButton" name="ToDefiniteButton">
+      <property name="text">
+       <string>To Definite</string>
+      </property>
+     </widget>
+    </item>
+    <item row="9" column="7">
+     <widget class="QPushButton" name="ExcludedCoursesLoadFileButton">
+      <property name="minimumSize">
+       <size>
+        <width>90</width>
+        <height>40</height>
+       </size>
+      </property>
+      <property name="maximumSize">
+       <size>
+        <width>5</width>
+        <height>40</height>
+       </size>
+      </property>
+      <property name="layoutDirection">
+       <enum>Qt::LeftToRight</enum>
+      </property>
+      <property name="text">
+       <string>Load Data</string>
+      </property>
+     </widget>
+    </item>
+    <item row="10" column="5">
+     <widget class="QLabel" name="DefiniteSplitDepartmentsLabel">
+      <property name="text">
+       <string>Definite Split Departments</string>
+      </property>
+     </widget>
+    </item>
+    <item row="2" column="0" rowspan="2" colspan="3">
+     <widget class="QListWidget" name="TermListWidget">
+      <property name="minimumSize">
+       <size>
+        <width>0</width>
+        <height>80</height>
+       </size>
+      </property>
+      <property name="maximumSize">
+       <size>
+        <width>16777215</width>
+        <height>80</height>
+       </size>
+      </property>
+     </widget>
+    </item>
+    <item row="12" column="4">
+     <widget class="QPushButton" name="FromDefiniteButton">
+      <property name="text">
+       <string>From Definite</string>
+      </property>
+     </widget>
+    </item>
+    <item row="9" column="0" rowspan="7" colspan="3">
+     <widget class="QPlainTextEdit" name="MessageCenterTextEdit">
+      <property name="enabled">
+       <bool>true</bool>
+      </property>
+      <property name="readOnly">
+       <bool>true</bool>
+      </property>
+     </widget>
+    </item>
+    <item row="5" column="2">
+     <widget class="QPushButton" name="LoadDataButton">
+      <property name="minimumSize">
+       <size>
+        <width>0</width>
+        <height>40</height>
+       </size>
+      </property>
+      <property name="maximumSize">
+       <size>
+        <width>16777215</width>
+        <height>40</height>
+       </size>
+      </property>
+      <property name="text">
+       <string>Load Data</string>
+      </property>
+     </widget>
+    </item>
+    <item row="8" column="5">
+     <widget class="QLabel" name="ExcludedCoursesFileLabel">
+      <property name="text">
+       <string>Excluded Courses File</string>
+      </property>
+     </widget>
+    </item>
+    <item row="9" column="5">
+     <widget class="QPlainTextEdit" name="ExcludedCoursesFileTextEdit">
+      <property name="minimumSize">
+       <size>
+        <width>0</width>
+        <height>40</height>
+       </size>
+      </property>
+      <property name="maximumSize">
+       <size>
+        <width>16777215</width>
+        <height>40</height>
+       </size>
+      </property>
+     </widget>
+    </item>
+    <item row="1" column="3">
+     <widget class="QLabel" name="CoursesLabel">
+      <property name="text">
+       <string>Courses</string>
+      </property>
+     </widget>
+    </item>
+    <item row="8" column="3">
+     <widget class="QLabel" name="DepartmentsLabel">
+      <property name="text">
+       <string>Departments</string>
+      </property>
+     </widget>
+    </item>
+    <item row="11" column="5" rowspan="2" colspan="3">
+     <widget class="QListWidget" name="DefiniteSplitDepartmentsListWidget"/>
+    </item>
+    <item row="1" column="0">
+     <widget class="QLabel" name="TermLabel">
+      <property name="text">
+       <string>Term</string>
+      </property>
+     </widget>
+    </item>
+    <item row="6" column="0">
+     <widget class="QLabel" name="NumberOfExamDaysLabel">
+      <property name="text">
+       <string>Number of Exam Days</string>
+      </property>
+     </widget>
+    </item>
+    <item row="5" column="0">
+     <widget class="QTextEdit" name="DataFileTextEdit">
+      <property name="minimumSize">
+       <size>
+        <width>0</width>
+        <height>40</height>
+       </size>
+      </property>
+      <property name="maximumSize">
+       <size>
+        <width>16777215</width>
+        <height>40</height>
+       </size>
+      </property>
+     </widget>
+    </item>
+    <item row="2" column="5" rowspan="6" colspan="3">
+     <widget class="QListWidget" name="ExcludedCoursesListWidget"/>
+    </item>
+    <item row="2" column="4">
+     <widget class="QPushButton" name="ToExcludedButton">
+      <property name="text">
+       <string>To Excluded</string>
+      </property>
+     </widget>
+    </item>
+    <item row="14" column="4">
+     <widget class="QPushButton" name="ToRestrictedButton">
+      <property name="text">
+       <string>To Restricted</string>
+      </property>
+     </widget>
+    </item>
+    <item row="16" column="0" colspan="3">
+     <widget class="QPushButton" name="CreateExamScheduleButton">
+      <property name="text">
+       <string>Create Exam Schedule</string>
+      </property>
+     </widget>
+    </item>
+    <item row="9" column="3" rowspan="7">
+     <widget class="QListWidget" name="DepartmentsListWidget"/>
+    </item>
+    <item row="8" column="0" colspan="3">
+     <widget class="QLabel" name="MessageCenterLabel">
+      <property name="text">
+       <string>Message Center</string>
+      </property>
+      <property name="alignment">
+       <set>Qt::AlignCenter</set>
+      </property>
+     </widget>
+    </item>
+    <item row="0" column="0" colspan="8">
+     <widget class="QLabel" name="SSMESLabel">
+      <property name="font">
+       <font>
+        <pointsize>20</pointsize>
+        <italic>false</italic>
+       </font>
+      </property>
+      <property name="text">
+       <string>School of Science and Math Exam Scheduler</string>
+      </property>
+      <property name="alignment">
+       <set>Qt::AlignCenter</set>
+      </property>
+     </widget>
+    </item>
+    <item row="16" column="3">
+     <widget class="QProgressBar" name="ProgressBar">
+      <property name="value">
+       <number>0</number>
+      </property>
+     </widget>
+    </item>
+    <item row="9" column="6">
+     <widget class="QPushButton" name="ExcludedCoursesFileButton">
+      <property name="minimumSize">
+       <size>
+        <width>0</width>
+        <height>40</height>
+       </size>
+      </property>
+      <property name="maximumSize">
+       <size>
+        <width>16777215</width>
+        <height>40</height>
+       </size>
+      </property>
+      <property name="text">
+       <string>Choose File</string>
+      </property>
+     </widget>
+    </item>
+   </layout>
+  </widget>
+  <widget class="QMenuBar" name="menubar">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>0</y>
+     <width>1149</width>
+     <height>30</height>
+    </rect>
+   </property>
+   <widget class="QMenu" name="menuFile">
+    <property name="title">
+     <string>File</string>
+    </property>
+    <addaction name="separator"/>
+    <addaction name="actionOpen"/>
+    <addaction name="actionSave_As"/>
+    <addaction name="actionSave"/>
+    <addaction name="separator"/>
+    <addaction name="actionQuit"/>
+   </widget>
+   <widget class="QMenu" name="menuHelp">
+    <property name="title">
+     <string>Help</string>
+    </property>
+    <addaction name="actionSSMES_Help"/>
+    <addaction name="actionSSMES_on_Github"/>
+    <addaction name="separator"/>
+    <addaction name="actionAbout_SSMES"/>
+   </widget>
+   <widget class="QMenu" name="menuSettings">
+    <property name="title">
+     <string>Settings</string>
+    </property>
+    <addaction name="actionTerm_Schedule"/>
+    <addaction name="actionRandom_Trials"/>
+    <addaction name="actionRandom_Seed"/>
+   </widget>
+   <addaction name="menuFile"/>
+   <addaction name="menuSettings"/>
+   <addaction name="menuHelp"/>
+  </widget>
+  <widget class="QStatusBar" name="statusbar"/>
+  <action name="actionSave_As">
+   <property name="text">
+    <string>Save As...</string>
+   </property>
+  </action>
+  <action name="actionSave">
+   <property name="text">
+    <string>Save</string>
+   </property>
+  </action>
+  <action name="actionOpen">
+   <property name="text">
+    <string>Open...</string>
+   </property>
+  </action>
+  <action name="actionQuit">
+   <property name="text">
+    <string>Quit</string>
+   </property>
+  </action>
+  <action name="actionRandom_Trials">
+   <property name="text">
+    <string>Total Random Trials</string>
+   </property>
+  </action>
+  <action name="actionRandom_Seed">
+   <property name="text">
+    <string>Random Seed</string>
+   </property>
+  </action>
+  <action name="actionInfer_Splits">
+   <property name="text">
+    <string>Infer Splits</string>
+   </property>
+  </action>
+  <action name="actionSSMES_Help">
+   <property name="text">
+    <string>SSMES Help</string>
+   </property>
+  </action>
+  <action name="actionSSMES_on_Github">
+   <property name="text">
+    <string>SSMES on Github</string>
+   </property>
+  </action>
+  <action name="actionAbout_SSMES">
+   <property name="text">
+    <string>About SSMES</string>
+   </property>
+  </action>
+  <action name="actionTerm_Schedule">
+   <property name="text">
+    <string>Term Schedule</string>
+   </property>
+  </action>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>
