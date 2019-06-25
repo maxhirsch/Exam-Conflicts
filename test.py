@@ -142,13 +142,6 @@ def set_semester_or_trimester():
     msg.setWindowTitle("Set Term")
     semester_button = msg.addButton("Semester", QMessageBox.YesRole)
     trimester_button = msg.addButton("Trimester", QMessageBox.YesRole)
-    #msg.setStandardButtons(QMessageBox.Yes | QMessageBox.No)
-    #semester_button = msg.button(QMessageBox.Yes)
-    #semester_button.setText("Semester")
-    #trimester_button = msg.button(QMessageBox.No)
-    #trimester_button.setText("Trimester")
-    
-    #msg.setIconPixmap(None)
 
     choice = msg.exec_()
     ui.TermListWidget.clear()

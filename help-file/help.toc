@@ -1,0 +1,16 @@
+\babel@toc {english}{}
+\contentsline {section}{\numberline {1}Introduction}{2}{section.1}% 
+\contentsline {section}{\numberline {2}About the Minimization Algorithm}{2}{section.2}% 
+\contentsline {section}{\numberline {3}Available Settings}{3}{section.3}% 
+\contentsline {subsection}{\numberline {3.1}Term Schedule}{3}{subsection.3.1}% 
+\contentsline {subsection}{\numberline {3.2}Total Random Trials}{3}{subsection.3.2}% 
+\contentsline {subsection}{\numberline {3.3}Random Seed}{3}{subsection.3.3}% 
+\contentsline {section}{\numberline {4}Entry Fields}{3}{section.4}% 
+\contentsline {subsection}{\numberline {4.1}Term}{3}{subsection.4.1}% 
+\contentsline {subsection}{\numberline {4.2}Data File}{3}{subsection.4.2}% 
+\contentsline {subsubsection}{\numberline {4.2.1}Data File Format}{3}{subsubsection.4.2.1}% 
+\contentsline {subsection}{\numberline {4.3}Number of Exam Days}{4}{subsection.4.3}% 
+\contentsline {subsection}{\numberline {4.4}Courses and Excluded Courses}{4}{subsection.4.4}% 
+\contentsline {subsubsection}{\numberline {4.4.1}Excluded Courses File}{4}{subsubsection.4.4.1}% 
+\contentsline {subsection}{\numberline {4.5}Departments}{4}{subsection.4.5}% 
+\contentsline {section}{\numberline {5}Output}{5}{section.5}% 

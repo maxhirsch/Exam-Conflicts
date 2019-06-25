@@ -1,0 +1,114 @@
+\documentclass[12pt]{article}
+\usepackage[utf8]{inputenc}
+%% Language and font encodings
+\usepackage[english]{babel}
+\usepackage[T1]{fontenc}
+\usepackage{float}
+\usepackage{algorithm}
+\usepackage{algpseudocode}
+\usepackage{amsmath}
+
+\algdef{SE}[DOWHILE]{Do}{doWhile}{\algorithmicdo}[1]{\algorithmicwhile\ #1}
+
+\usepackage{url}
+\usepackage[top=2.5cm, bottom=2.5cm, left=2.5cm, 
+	right=2.5cm, marginparwidth=1.7cm]{geometry}
+\usepackage{lastpage}
+\usepackage{fancyhdr}
+
+\pagestyle{fancy}
+\fancyhead[R]{Page \thepage\ of\ \pageref{LastPage}}
+\fancyhead[C]{SSMES}
+\fancyhead[L]{}
+
+\usepackage[colorlinks=true, allcolors=blue]{hyperref}
+
+\title{School of Science and Math Exam Scheduler (SSMES) Help File\footnote{\url{https://github.com/maxhirsch/ssmes}}}
+\date{Spring 2019}
+
+
+\begin{document}
+
+\maketitle
+\tableofcontents
+\newpage
+
+\section{Introduction}
+The School of Science and Math Exam Scheduler (SSMES) is the result of a 2019 Mini-Term project at the North Carolina School of Science and Mathematics which aimed to reduce the number of exam conflicts at the school. Students involved in the Mini-Term were Daniel Carter, Edward Feng, Kathleen Hablutzel, and Max Hirsch. This documentation serves as a help guide in running the interface for the code which minimizes exam conflicts.
+
+\section{About the Minimization Algorithm}
+Below we outline the general algorithm for determining low-conflict exam schedules. It by no means produces the lowest-conflict schedule, but it maintains similar structure to previous exam schedules while reducing conflicts. The algorithm is more precisely described in the code on \href{https://github.com/maxhirsch/ssmes}{Github}. In the algorithm, a \textit{conflict} is when a student has more than one exam in the same exam block. Previously, NCSSM had three exams each day during exam week, allowing another type of conflict in which a student had three exams in a 24 hour period. Our solution was to remove one exam period from each day so that students could no longer have this conflict.
+\begin{algorithm}
+	\caption{Creating low-conflict exam schedule}
+	\textbf{Result:} Exam blocks with relatively few conflicts
+	\begin{algorithmic}[1]
+		\Procedure{Reduce Conflicts}{}
+		\For{n trials}
+			\State Split departments
+			\State Randomly assign departments to exam blocks
+			\Do
+				\State Swap departments between exam blocks if the swap reduces conflicts
+			\doWhile{conflicts reduced}
+		\EndFor
+		\EndProcedure
+	\end{algorithmic}
+\end{algorithm}
+
+\begin{algorithm}
+	\label{alg:split}
+	\caption{Splitting Departments}
+	\textbf{Result:} Departments which may or may not be split into two
+	\begin{algorithmic}[1]
+		\Procedure{Split Departments}{$definite\_split$, $restricted\_split$}
+		\For{n trials}
+			\State Split $definite\_split$ departments
+			\State Split any non $restricted\_split$ departments if there are courses with no intra-department conflicts
+		\EndFor
+		\EndProcedure
+	\end{algorithmic}
+\end{algorithm}
+
+\section{Available Settings}
+In this section, we describe each of the settings in SSMES.
+
+\subsection{Term Schedule}
+Under \textit{Settings $\to$ Term Schedule}, the school schedule can be toggled from trimester to semester.
+\subsection{Total Random Trials}
+Under \textit{Settings $\to$ Total Random Trials}, the number of random initializations of schedules can be set. The default value is 5. Larger values of this setting will result in fewer conflicts, but the minimization will take a longer time.
+\subsection{Random Seed}
+Under \textit{Settings $\to$ Random Seed}, the random seed for Total Random Trials can be set. The default value is 42.
+
+\section{Entry Fields}
+In this section, we describe each of the fields on the main screen of SSMES.
+
+\subsection{Term}
+Term is the trimester (T1, T2, or T3) or semester (S1 or S2) for which you would like to create an exam schedule. The term must chosen in the list before any data can be loaded.
+\subsection{Data File}
+The data file field is where you input the name/location of the file which contains course enrollment data. You can browse for this data by clicking "Choose File" beside the entry field. The data file must follow a specific format which we outline below.
+\subsubsection{Data File Format}
+The data file with course enrollment data is a .csv file formatted in the following way:\newline\newline
+StudentID,Trimester,Course1,Course2,...\newline
+1,1,0,1,...\newline
+2,1,0,0,...\newline
+3,1,1,0,...\newline
+\newline
+\noindent If on a semester schedule, "Semester" would appear in the header line rather than "Trimester." Course1, Course2,... represent the course numbers with two alphabetic characters followed by three numeric characters (e.g. CH401). Each row is the student ID followed by the term (1, 2, or 3 if a Trimester schedule; 1 or 2 if Semester), and a list of 1s and 0s according to whether or not respectively a student is taking that column's course. An example file can be found on the project \href{https://github.com/maxhirsch/ssmes}{Github}.
+\subsection{Number of Exam Days}
+Number of Exam Days is the number of days on which exams will be held. If, for example, it is 4, then there will be $2*4=8$ exam blocks.
+\subsection{Courses and Excluded Courses}
+\label{sec:excludedcourses}
+The Courses field will be populated when you load data in the Data File field. You can then exclude courses from the minimization (e.g. classes without exams or with final papers instead of exams) by clicking the course then clicking "To Excluded." You can move an excluded course back to the Courses field by clicking on the course in the Excluded Courses field and clicking "From Excluded." Once data is loaded from the Data File field, you can also load excluded courses into the Excluded Courses field by choosing an Excluded Courses file. This can be done with the Excluded Courses File field which is found below the Excluded Courses field. This file must be formatted in a particular way which we describe below.
+\subsubsection{Excluded Courses File}
+The Excluded Courses file should be formatted such that each excluded course is on its own line with no other characters surrounding it. For example:\newline\newline
+MA470\newline
+RE120\newline
+MA472\newline
+\newline
+and so on.
+\subsection{Departments}
+The Departments field will be populated when data is loaded in the Data File field. Departments can be split in the algorithm. We allow the user to explicitly split or not split departments by moving departments to the Definite Split Departments and Restricted Split Departments fields respectively in a manner similar to that of moving courses to excluded courses described in subsection \ref{sec:excludedcourses}. The splitting of departments can also be inferred according to the rule described in algorithm \ref{alg:split}. This inference can be enabled by checking the Infer Splits checkbox below the Restricted Split Departments field.
+
+\section{Output}
+The result of the optimization is two files. The user will provide a filename, \textit{fn}, and a popup will allow the user to select a folder to which the files should be saved. The files will be saved as $\textit{fn}\text{\_department\_courses.json}$ and $\textit{fn}\text{\_exam\_blocks.json}$. $\textit{fn}\text{\_department\_courses.json}$ contains the departments and their associated courses (a split department will end with a suffix to denote this). $\textit{fn}\text{\_exam\_blocks.json}$ will contain each exam block with the departments in that exam block. Note that there is no actual ordering to the exam blocks, as the order of the blocks themselves will not affect the total number of conflicts.
+
+\end{document}

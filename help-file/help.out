@@ -1,0 +1,15 @@
+\BOOKMARK [1][-]{section.1}{Introduction}{}% 1
+\BOOKMARK [1][-]{section.2}{About the Minimization Algorithm}{}% 2
+\BOOKMARK [1][-]{section.3}{Available Settings}{}% 3
+\BOOKMARK [2][-]{subsection.3.1}{Term Schedule}{section.3}% 4
+\BOOKMARK [2][-]{subsection.3.2}{Total Random Trials}{section.3}% 5
+\BOOKMARK [2][-]{subsection.3.3}{Random Seed}{section.3}% 6
+\BOOKMARK [1][-]{section.4}{Entry Fields}{}% 7
+\BOOKMARK [2][-]{subsection.4.1}{Term}{section.4}% 8
+\BOOKMARK [2][-]{subsection.4.2}{Data File}{section.4}% 9
+\BOOKMARK [3][-]{subsubsection.4.2.1}{Data File Format}{subsection.4.2}% 10
+\BOOKMARK [2][-]{subsection.4.3}{Number of Exam Days}{section.4}% 11
+\BOOKMARK [2][-]{subsection.4.4}{Courses and Excluded Courses}{section.4}% 12
+\BOOKMARK [3][-]{subsubsection.4.4.1}{Excluded Courses File}{subsection.4.4}% 13
+\BOOKMARK [2][-]{subsection.4.5}{Departments}{section.4}% 14
+\BOOKMARK [1][-]{section.5}{Output}{}% 15
