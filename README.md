@@ -2,6 +2,11 @@
 This exam scheduler is the result of a NCSSM Mini-Term 2019 project intended to help the school reduce exam conflicts. The final solution of the Mini-Term was to have only two exam blocks each day so as to avoid conflicts in which students would have three exams within a 24 hour period. Thus, this scheduler reduces the number of exam conflicts where students have more than one exam in a single exam block.
 
 ## Installing ssmes
+Most conveniently, SSMES can be downloaded as a single package for Windows or MacOS (files in the `Compiled Applications` folder). Alternatively, SSMES can be run in Python without a GUI through `exam_scheduler.py`; `ssmes_interface.py` and `test.py` are required for a GUI, which may be run from the command line with the command `python test.py`. 
+### Windows
+Simply download the `ssmes_windows` application from the `Compiled Applications` folder. The user may be prompted for administrator privileges during use (e.g. when opening help links or Github links from the help menu). Allow these privileges if prompted for full functionality.
+### MacOS
+Download the `ssmes_macos` application from the `Compiled Applications` folder. Before use, the user may be alerted that the application is from an untrusted developer. To fix this, go to *System Preferences &rarr; Security and Privacy &rarr; General* and trust the application at the bottom of the window.
 ### Dependencies
 `ssmes` requires `numpy` and `pandas`. The unpackaged GUI additionally requires `PyQt5`.
 
