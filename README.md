@@ -3,7 +3,7 @@ This exam scheduler is the result of a NCSSM Mini-Term 2019 project intended to 
 
 ## Installing ssmes
 ### Dependencies
-`ssmes` requires `numpy` and `pandas`.
+`ssmes` requires `numpy` and `pandas`. The unpackaged GUI additionally requires `PyQt5`.
 
 ## Available Settings
 #### Term Schedule
