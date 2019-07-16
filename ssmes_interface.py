@@ -12,6 +12,7 @@ from PyQt5 import QtCore, QtGui, QtWidgets
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
         self.term = None
+        self.TermSchedule = "trimester"
         self.data = None
         self.courses = None
         self.departments = None

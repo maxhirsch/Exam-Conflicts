@@ -38,6 +38,7 @@ def populate_term_list_widget():
     ui.TermListWidget.addItem("T1")
     ui.TermListWidget.addItem("T2")
     ui.TermListWidget.addItem("T3")
+    ui.TermSchedule = "trimester"
 
 
 def move_to_excluded_courses(item=None):
@@ -127,7 +128,7 @@ def quit_application():
     msg = QMessageBox()
     msg.setIcon(QMessageBox.Warning)
     msg.setText("Are you sure you want to quit?")
-    msg.setInformativeText("Any changes to the exam schedule will not be saved.")
+    msg.setInformativeText("All settings will be lost.")
     msg.setWindowTitle("Quit SSMES")
     msg.setStandardButtons(QMessageBox.Ok | QMessageBox.Cancel)
     choice = msg.exec_()
@@ -149,10 +150,12 @@ def set_semester_or_trimester():
     if choice == 0: # semester button
         ui.TermListWidget.addItem("S1")
         ui.TermListWidget.addItem("S2")
+        ui.TermSchedule = "semester"
     else:
         ui.TermListWidget.addItem("T1")
         ui.TermListWidget.addItem("T2")
         ui.TermListWidget.addItem("T3")
+        ui.TermSchedule = "trimester"
 
 def set_number_random_trials():
     num, ok = QInputDialog.getInt(None, "Random Trials", "Enter number of random trials:")
@@ -190,8 +193,18 @@ def load_data():
         return
     
     data = pd.read_csv(ui.DataFileTextEdit.toPlainText())
-    data = data[data.Trimester == ui.term]
-    data = data.drop(columns=["Student ID", "Trimester"])
+    if ui.TermSchedule == 'trimester':
+        if "Trimester" not in list(data):
+            write_to_message_center("ERROR: 'Trimester' not a column in data.")
+            return
+        data = data[data.Trimester == ui.term]
+        data = data.drop(columns=["Student ID", "Trimester"])
+    else:
+        if "Semester" not in list(data):
+            write_to_message_center("ERROR: 'Semester' not a column in data.")
+            return
+        data = data[data.Semester == ui.term]
+        data = data.drop(columns=["Student ID", "Semester"])
     write_to_message_center("Loaded data from " + ui.DataFileTextEdit.toPlainText())
     ui.CoursesListWidget.clear()
     ui.ExcludedCoursesListWidget.clear()
@@ -200,7 +213,6 @@ def load_data():
     ui.RestrictedSplitDepartmentsListWidget.clear()
     courses = list(data)
     
-
     zero_exams = []
     for course in courses:
         # this sum is the number of people taking this course
@@ -301,17 +313,15 @@ def get_split_constraints():
     restricted_splits = [str(ui.RestrictedSplitDepartmentsListWidget.item(i).text()) for i in range(ui.RestrictedSplitDepartmentsListWidget.count())]
     return definite_splits, restricted_splits
 
-def get_exam_schedule():#filename):
+def get_exam_schedule():
     """
     filename (str): The name of the data file
     """
     
-
     number_random_trials = ui.number_random_trials
     random_seed = ui.random_seed
     number_exam_days = get_number_exam_days()
     infer_splits = get_infer_splits()
-    trimester = get_term()
     definite_splits, restricted_splits = get_split_constraints()
 
     if type(number_random_trials) is not int:
@@ -331,11 +341,11 @@ def get_exam_schedule():#filename):
     np.random.seed(random_seed)
 
     # get data
-    data = ui.data#es.load_data(filename, trimester)
-    courses = ui.courses#list(data)
+    data = ui.data
+    courses = ui.courses
 
     # get departments
-    departments = ui.departments#es.get_departments(courses)
+    departments = ui.departments
 
     # split departments ("splitted" b/c naming collisions...)
     splitted_departments = es.split_departments(data, departments, courses, definite_splits=definite_splits, 
@@ -343,6 +353,7 @@ def get_exam_schedule():#filename):
 
     # assign departments to exam blocks
     exam_blocks = es.assign_exam_blocks(data, departments, splitted_departments, number_exam_days=number_exam_days)
+
     total_conflicts = sum([es.count_conflicts(data, departments, block) for block in exam_blocks])
     progress_counter = 100/number_random_trials
     ui.ProgressBar.setValue(progress_counter)
@@ -384,7 +395,15 @@ def get_exam_schedule():#filename):
 
     print(exam_blocks)
     print(departments)#splitted_departments)
+    write_to_message_center("Schedule saved to file.")
 
+def get_help():
+    if os.path.exists("./help-file/help.pdf"):
+        write_to_message_center("Opening help file.")
+        webbrowser.open("file://{}".format(os.path.join(os.path.dirname(os.path.abspath(__file__)), './help-file/help.pdf')))
+    else:
+        write_to_message_center("Help file not found. Redirecting to project Github help file.")
+        webbrowser.open("https://github.com/maxhirsch/ssmes/blob/master/help-file/help.pdf")
 
 if __name__=='__main__':
     app = QApplication(sys.argv)
@@ -401,6 +420,7 @@ if __name__=='__main__':
 
     # set quit action in file menu
     ui.actionQuit.triggered.connect(quit_application)
+    ui.actionSSMES_Help.triggered.connect(get_help)
     ui.actionSSMES_on_Github.triggered.connect(open_project_github)
     ui.actionAbout_SSMES.triggered.connect(about_popup)
     ui.actionRandom_Trials.triggered.connect(set_number_random_trials)
@@ -445,7 +465,4 @@ if __name__=='__main__':
     # run app
     window.show()
     sys.exit(app.exec_())
-
-
-
 
